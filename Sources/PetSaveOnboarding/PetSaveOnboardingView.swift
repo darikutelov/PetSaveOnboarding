@@ -1,13 +1,13 @@
 //
-//  MyPetSaveOnboardingView.swift
-//  PetSaveOnboarding
+//  SwiftUIView.swift
+//  
 //
 //  Created by Dariy Kutelov on 7.05.24.
 //
 
 import SwiftUI
 
-struct MyPetSaveOnboardingView: View {
+struct PetSaveOnboardingView: View {
     @State var currentPageIndex = 0
     private var onNext: (_ currentIndex: Int) -> Void = { _ in }
     private var onSkip: () -> Void = {}
@@ -19,7 +19,7 @@ struct MyPetSaveOnboardingView: View {
     private var skipButtonTitle: String {
         items[currentPageIndex].skipButtonTitle
     }
-
+    
     public init(items: [OnboardingModel]) {
         self.items = items
     }
@@ -42,14 +42,16 @@ struct MyPetSaveOnboardingView: View {
                 .onAppear(perform: setupPageControlAppearance)
                 // 2
                 Button(action: next) {
-                    Text(nextButtonTitle)
+                    Text(currentPageIndex == items.count - 1 ?
+                         "Start Over" : nextButtonTitle)
                         .frame(maxWidth: .infinity, maxHeight: 44)
                 }
                 .animation(nil, value: currentPageIndex)
                 .buttonStyle(OnboardingButtonStyle(color: .rwDark))
                 
                 Button(action: onSkip) {
-                    Text(skipButtonTitle)
+                    Text(currentPageIndex == items.count - 1 ?
+                         "Finish" : skipButtonTitle)
                         .frame(maxWidth: .infinity, maxHeight: 44)
                 }
                 .animation(nil, value: currentPageIndex)
@@ -59,7 +61,7 @@ struct MyPetSaveOnboardingView: View {
             .background(OnboardingBackgroundView())
         }
     }
-
+    
     public func onNext(
         action: @escaping (_ currentIndex: Int) -> Void
     ) -> Self {
@@ -74,7 +76,7 @@ struct MyPetSaveOnboardingView: View {
         return petSaveOnboardingView
     }
     
-
+    
     private func setupPageControlAppearance() {
         UIPageControl.appearance().currentPageIndicatorTintColor =
         UIColor(.rwGreen)
@@ -93,29 +95,27 @@ struct MyPetSaveOnboardingView: View {
 
 }
 
-// MARK: - Previews Onboarding.
-private extension PreviewProvider {
-    static var mockOnboardingModel: [OnboardingModel] {
-        [
-            OnboardingModel(
-                title: "Welcome to\n PetSave",
-                description: "Looking for a Pet?\n Then you're at the right place",
-                image: .bird
-            ),
-            OnboardingModel(
-                title: "Search...",
-                description: "Search from a list of our huge database of animals.",
-                image: .dogBoneStand,
-                nextButtonTitle: "Allow"
-            ),
-            OnboardingModel(
-                title: "Nearby",
-                description: "Find pets to adopt from nearby your place...",
-                image: .chameleon
-            )
-        ]
-    }
+#Preview {
+    PetSaveOnboardingView(items: [
+        OnboardingModel(
+            title: "Welcome to\n PetSave",
+            description: "Looking for a Pet?\n Then you're at the right place",
+            image: .bird
+        ),
+        OnboardingModel(
+            title: "Search...",
+            description: "Search from a list of our huge database of animals.",
+            image: .dogBoneStand,
+            nextButtonTitle: "Allow"
+        ),
+        OnboardingModel(
+            title: "Nearby",
+            description: "Find pets to adopt from nearby your place...",
+            image: .chameleon
+        )
+    ])
 }
+
 struct OnboardingButtonStyle: ButtonStyle {
     let color: Color
     
